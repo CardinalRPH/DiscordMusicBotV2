@@ -94,11 +94,11 @@ export const fetchPlaylist = async (playlistURL: string) => {
       });
       res.data.items.forEach((value) =>
         playlistItem.push({
-          id: value.snippet.resourceId.videoId,
-          embedImg: value.snippet.thumbnails.default.url,
-          title: value.snippet.title,
-          singer: value.snippet.videoOwnerChannelTitle,
-          singerId: value.snippet.videoOwnerChannelId,
+          id: value?.snippet.resourceId?.videoId,
+          embedImg: value?.snippet.thumbnails.default?.url,
+          title: value?.snippet?.title,
+          singer: value?.snippet?.videoOwnerChannelTitle,
+          singerId: value?.snippet?.videoOwnerChannelId,
         })
       );
       if (res.data.nextPageToken) {

@@ -3,6 +3,7 @@ import {
   AudioPlayerStatus,
   AudioResource,
   createAudioResource,
+   type VoiceConnection,
 } from "@discordjs/voice";
 import { validateYouTubeUrl } from "../utils/ytResourceFinder";
 import ytdl from "@distube/ytdl-core";
@@ -25,6 +26,7 @@ type PlayerData = {
   queue: QueueItem[];
   currentResource: AudioResource | null;
   currentMessage: Message<true> | null;
+  subscription: ReturnType<VoiceConnection['subscribe']> | null;
 };
 
 export const players = new Map<string, PlayerData>();
@@ -45,6 +47,7 @@ export const addToQueue = (
       queue: [song],
       currentResource: null,
       currentMessage: null,
+      subscription: null,
     };
     playerEvent(newPlayer, textChannel, guildId);
     players.set(guildId, newPlayer);

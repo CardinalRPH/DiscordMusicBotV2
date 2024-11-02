@@ -3,10 +3,11 @@ import {
   GuildMember,
   SlashCommandBuilder,
 } from "discord.js";
-import { players, playNextSong } from "../../../AudioFunction/queueManager";
+import { players } from "../../../AudioFunction/queueManager";
+import { queueEmbed } from "../../../utils/embedBuilder";
 export const data = new SlashCommandBuilder()
-  .setName("skip")
-  .setDescription("Skip to the next song");
+  .setName("queue")
+  .setDescription("Show Queue on Player");
 
 export const execute = async (interaction: CommandInteraction) => {
   const member = interaction.member as GuildMember;
@@ -19,15 +20,13 @@ export const execute = async (interaction: CommandInteraction) => {
   }
   const playerData = players.get(interaction.guildId as string);
 
-  if (playerData?.player && playerData?.subscription) { 
-    if (playerData?.queue.length > 0) {   
-      playerData.player.stop()
-      playerData.queue.shift()
-      playNextSong(interaction.guildId as string)
-      return interaction.reply({ content: "Song Skipped"});
-    } else {
-      return interaction.reply({ content: "No Songs In Queue" });
+  if (playerData?.player && playerData?.subscription) {
+    if (playerData.queue.length <= 0) {
+      return interaction.reply("No Queue")
     }
+    return interaction.reply({
+      embeds:[queueEmbed(playerData.queue)]
+    })
   } else {
     return interaction.reply({ content: "No Player Found" });
   }

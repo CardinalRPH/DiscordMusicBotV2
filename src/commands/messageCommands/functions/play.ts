@@ -38,8 +38,8 @@ export const execute = async (message: Message) => {
     });
   }
 
-  const filterQ = message.content.split(" ").slice(1).join(" ")
-  const query = filterQ
+  const filterQ = message.content.split(" ").slice(1).join(" ");
+  const query = filterQ;
 
   try {
     if (uriValidator(query as string, ytPlaylistPattern)) {
@@ -91,7 +91,7 @@ export const execute = async (message: Message) => {
 
       const playerData2 = players.get(message.guildId as string);
       if (!playerData2?.currentResource && playerData2?.player) {
-        voiceConn.subscribe(playerData2?.player);
+        playerData2.subscription = voiceConn.subscribe(playerData2?.player);
         await playNextSong(message.guildId as string);
       }
       if (playerData2?.queue[0]) {
@@ -140,8 +140,7 @@ export const execute = async (message: Message) => {
 
       if (!playerData?.currentResource && playerData?.player) {
         console.log("============================");
-
-        voiceConn.subscribe(playerData?.player);
+        playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(message.guildId as string);
 
         return message.reply({
@@ -187,8 +186,7 @@ export const execute = async (message: Message) => {
 
       if (!playerData?.currentResource && playerData?.player) {
         console.log("============================");
-
-        voiceConn.subscribe(playerData?.player);
+        playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(message.guildId as string);
 
         return message.reply({
@@ -196,7 +194,7 @@ export const execute = async (message: Message) => {
         });
       }
 
-      return message.reply("Bad Status Single");
+      return message.reply("Bad Status Search Video");
     }
   } catch (error) {
     message.reply("Failed to play audio: " + error);

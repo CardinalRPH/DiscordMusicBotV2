@@ -34,7 +34,9 @@ export const data = new SlashCommandBuilder()
   .addStringOption((option) =>
     option
       .setName("query-music")
-      .setDescription("Input Video Or Playlist Youtube URL | Search Youtube Video")
+      .setDescription(
+        "Input Video Or Playlist Youtube URL | Search Youtube Video"
+      )
       .setRequired(true)
   );
 
@@ -150,8 +152,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
       if (!playerData?.currentResource && playerData?.player) {
         console.log("============================");
-
-        voiceConn.subscribe(playerData?.player);
+        playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(interaction.guildId as string);
 
         return interaction.reply({
@@ -169,10 +170,10 @@ export const execute = async (interaction: CommandInteraction) => {
         {
           ...videosDetail[0],
           url: `${dcConfig.YOUTUBE_VIDEO_BASE_URL}${videosDetail[0].videoId}`,
-          requestBy: interaction.user.id || null
+          requestBy: interaction.user.id || null,
         },
         textChannel
-      )
+      );
       const playerData = players.get(interaction.guildId as string);
       const voiceConnection = getVoiceConnection(interaction.guildId as string);
       if (voiceConnection && playerData?.player) {
@@ -197,8 +198,7 @@ export const execute = async (interaction: CommandInteraction) => {
 
       if (!playerData?.currentResource && playerData?.player) {
         console.log("============================");
-
-        voiceConn.subscribe(playerData?.player);
+        playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(interaction.guildId as string);
 
         return interaction.reply({
@@ -206,7 +206,7 @@ export const execute = async (interaction: CommandInteraction) => {
         });
       }
 
-      return interaction.reply("Bad Status Single");
+      return interaction.reply("Bad Status Search Video");
     }
   } catch (error) {
     interaction.reply("Something went Wrong");
