@@ -1,6 +1,6 @@
 import axios from "axios";
 import dcConfig from "../configs/config";
-
+import play from "play-dl"
 interface playlistApiResponse {
   items: any[];
   nextPageToken?: string;
@@ -189,23 +189,26 @@ export const fetchVideoDetail = async (
 
 export const fetchSearchVideo = async (q: string) => {
   try {
-    const res = await axios<searchApiResponse>({
-      method: "GET",
-      url: dcConfig.YOUTUBE_SEARCH_API_URL,
-      params: {
-        key: dcConfig.YOUTUBE_API_KEY,
-        q: q,
-        type: "video",
-        maxResults: 1,
-        part: "snippet",
-      },
-    });
+    const playSrc = await play.search(q, {
+      limit: 1,
+    })
+    // const res = await axios<searchApiResponse>({
+    //   method: "GET",
+    //   url: dcConfig.YOUTUBE_SEARCH_API_URL,
+    //   params: {
+    //     key: dcConfig.YOUTUBE_API_KEY,
+    //     q: q,
+    //     type: "video",
+    //     maxResults: 1,
+    //     part: "snippet",
+    //   },
+    // });
     return {
-      id: res.data.items[0].id.videoId,
-      embedImg: res.data.items[0].snippet.thumbnails.default.url,
-      title: res.data.items[0].snippet.title,
-      singer: res.data.items[0].snippet.channelTitle,
-      singerId: res.data.items[0].snippet.channelId,
+      id: playSrc[0].id as string,
+      embedImg:  playSrc[0].thumbnails[0].url,
+      title: playSrc[0].title,
+      singer: playSrc[0].channel?.name,
+      singerId: playSrc[0].channel?.id,
     };
   } catch (error) {
     console.error("Error fetching data:", error);
