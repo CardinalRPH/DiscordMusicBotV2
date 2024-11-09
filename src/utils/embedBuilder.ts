@@ -26,9 +26,11 @@ export const musicEmbed = (
 };
 
 export const queueEmbed = (queue: QueueItem[]) => {
-  const convQueue = queue.map((value, index) => {
-    return `[${index+1}] ${value.title} : ${value.duration}`
-  }).join("\n")
+  const convQueue = queue
+    .map((value, index) => {
+      return `[${index + 1}] ${value.title} : ${value.duration}`;
+    })
+    .join("\n");
   const embeder = new EmbedBuilder()
     .setColor(0x0099ff)
     .setAuthor({
@@ -37,6 +39,20 @@ export const queueEmbed = (queue: QueueItem[]) => {
         "https://i.scdn.co/image/ab67616d0000b273eda9478c39a21e1cdc6609ca",
     })
     .setDescription(convQueue);
+
+  return embeder;
+};
+
+export const lyricEmbed = (title: string, lyric: string) => {
+  const embeder = new EmbedBuilder()
+    .setColor(0x0099ff)
+    .setTitle(title)
+    .setAuthor({
+      name: "Queue",
+      iconURL:
+        "https://i.scdn.co/image/ab67616d0000b273eda9478c39a21e1cdc6609ca",
+    })
+    .setDescription(lyric);
   
   return embeder
 };

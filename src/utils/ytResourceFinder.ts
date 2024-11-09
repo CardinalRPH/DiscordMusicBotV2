@@ -1,6 +1,6 @@
 import axios from "axios";
 import dcConfig from "../configs/config";
-import play from "play-dl"
+import play from "play-dl";
 interface playlistApiResponse {
   items: any[];
   nextPageToken?: string;
@@ -127,38 +127,42 @@ export const fetchVideoDetail = async (
   isBatch: boolean
 ) => {
   if (isBatch) {
-    const batchSize = 50;
-    const videoBatches = [];
+    try {
+      const batchSize = 50;
+      const videoBatches = [];
 
-    for (let i = 0; i < videoIds.length; i += batchSize) {
-      videoBatches.push(videoIds.slice(i, i + batchSize));
-    }
+      for (let i = 0; i < videoIds.length; i += batchSize) {
+        videoBatches.push(videoIds.slice(i, i + batchSize));
+      }
 
-    const fetchPromise = videoBatches.map((batch) => {
-      return axios<videoApiResponse>({
-        method: "GET",
-        url: dcConfig.YOUTUBE_VIDEO_API_URL,
-        params: {
-          key: dcConfig.YOUTUBE_API_KEY,
-          part: "contentDetails,snippet",
-          id: batch.join(","),
-        },
+      const fetchPromise = videoBatches.map((batch) => {
+        return axios<videoApiResponse>({
+          method: "GET",
+          url: dcConfig.YOUTUBE_VIDEO_API_URL,
+          params: {
+            key: dcConfig.YOUTUBE_API_KEY,
+            part: "contentDetails,snippet",
+            id: batch.join(","),
+          },
+        });
       });
-    });
 
-    const results = await Promise.all(fetchPromise);
+      const results = await Promise.all(fetchPromise);
 
-    const durations: fetchVideoType[] = results.flatMap((res) =>
-      res.data.items.map((item: any) => ({
-        videoId: item.id,
-        duration: parseISO8601Duration(item.contentDetails.duration),
-        embedImg: item.snippet.thumbnails.default.url,
-        title: item.snippet.title,
-        singer: item.snippet.channelTitle,
-        singerId: item.snippet.channelId,
-      }))
-    );
-    return durations;
+      const durations: fetchVideoType[] = results.flatMap((res) =>
+        res.data.items.map((item: any) => ({
+          videoId: item.id,
+          duration: parseISO8601Duration(item.contentDetails.duration),
+          embedImg: item.snippet.thumbnails.default.url,
+          title: item.snippet.title,
+          singer: item.snippet.channelTitle,
+          singerId: item.snippet.channelId,
+        }))
+      );
+      return durations;
+    } catch (error) {
+      throw error;
+    }
   } else {
     try {
       const res = await axios<videoApiResponse>({
@@ -191,7 +195,14 @@ export const fetchSearchVideo = async (q: string) => {
   try {
     const playSrc = await play.search(q, {
       limit: 1,
-    })
+    });
+    return {
+      id: playSrc[0].id as string,
+      embedImg: playSrc[0].thumbnails[0].url,
+      title: playSrc[0].title,
+      singer: playSrc[0].channel?.name,
+      singerId: playSrc[0].channel?.id,
+    };
     // const res = await axios<searchApiResponse>({
     //   method: "GET",
     //   url: dcConfig.YOUTUBE_SEARCH_API_URL,
@@ -203,13 +214,13 @@ export const fetchSearchVideo = async (q: string) => {
     //     part: "snippet",
     //   },
     // });
-    return {
-      id: playSrc[0].id as string,
-      embedImg:  playSrc[0].thumbnails[0].url,
-      title: playSrc[0].title,
-      singer: playSrc[0].channel?.name,
-      singerId: playSrc[0].channel?.id,
-    };
+    // return {
+    //   id: res.data.items[0].id.videoId,
+    //   embedImg: res.data.items[0].snippet.thumbnails.default.url,
+    //   title: res.data.items[0].snippet.title,
+    //   singer: res.data.items[0].snippet.channelTitle,
+    //   singerId: res.data.items[0].snippet.channelId,
+    // }
   } catch (error) {
     console.error("Error fetching data:", error);
     throw error;

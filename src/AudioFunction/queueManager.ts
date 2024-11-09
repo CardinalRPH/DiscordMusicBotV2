@@ -3,13 +3,14 @@ import {
   AudioPlayerStatus,
   AudioResource,
   createAudioResource,
-   type VoiceConnection,
+  type VoiceConnection,
 } from "@discordjs/voice";
 import { validateYouTubeUrl } from "../utils/ytResourceFinder";
 import ytdl from "@distube/ytdl-core";
 // import play from "play-dl";
 import { type Message, type TextChannel } from "discord.js";
 import { musicEmbed } from "../utils/embedBuilder";
+import dcConfig from "../configs/config";
 
 export type QueueItem = {
   url: string;
@@ -26,11 +27,28 @@ type PlayerData = {
   queue: QueueItem[];
   currentResource: AudioResource | null;
   currentMessage: Message<true> | null;
-  subscription: ReturnType<VoiceConnection['subscribe']> | null;
+  subscription: ReturnType<VoiceConnection["subscribe"]> | null;
 };
 
 export const players = new Map<string, PlayerData>();
+const rawCookie = dcConfig.YOUTUBE_COOKIE;
+const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
+const parsedCookie = JSON.parse(cleanCookie);
+//this use for ytdl
+// const rawCookie = dcConfig.YOUTUBE_COOKIE;
+// const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
+// const agent = ytdl.createProxyAgent(
+//   { uri: "18.139.110.14:8080" },
+//   JSON.parse(cleanCookie)
+// );
+//end
 
+//auth play dl
+// play.setToken({
+//   youtube: {
+//     cookie: cleanCookie,
+//   },
+// });
 export const addToQueue = (
   guildId: string,
   song: QueueItem,
@@ -126,7 +144,7 @@ const playerEvent = (
         console.error("Failed to delete message:", err);
       }
     }
-    player.queue.shift()
+    player.queue.shift();
     await playNextSong(guildId);
   });
 };

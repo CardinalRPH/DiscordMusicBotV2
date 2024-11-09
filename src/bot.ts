@@ -22,7 +22,7 @@ const client = new Client({
   ],
 });
 
-client.once("ready", () => {
+client.once("ready", async () => {
   const guildId = getAllID();
   guildId.forEach(async (value) => {
     await deployCommands({ guildId: value });
