@@ -56,6 +56,7 @@ client.on("messageCreate", (message) => {
     return;
   }
 
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const [commandInput, ...args] = message.content.slice(1).split(" ");
   const prefix = getPrefix(message.guild?.id);
   if (!prefix) {
