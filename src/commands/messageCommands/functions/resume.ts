@@ -1,7 +1,6 @@
 import { AudioPlayerStatus, getVoiceConnection } from "@discordjs/voice";
-import { TextChannel, type Message } from "discord.js";
+import { type Message } from "discord.js";
 import { players, playNextSong } from "../../../AudioFunction/queueManager";
-import { musicEmbed } from "../../../utils/embedBuilder";
 
 export const data = {
   name: "resume",
@@ -35,11 +34,6 @@ export const execute = async (message: Message) => {
       if (playerData.player.state.status === AudioPlayerStatus.Idle) {
         if (playerData.queue.length > 0) {
           playNextSong(message.guildId as string)
-          const textChannel = message.channel as TextChannel
-          const msg = await textChannel.send({
-            embeds: [musicEmbed({ ...playerData.queue[0] })],
-          });
-          playerData.currentMessage = msg as Message<true>
           return message.reply({
             content: "Song Played",
           });

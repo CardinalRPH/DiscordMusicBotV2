@@ -31,7 +31,7 @@ export const execute = async (message: Message) => {
       const lyrics = await getSongLyric(currentSongTitle);
       if (!lyrics || !lyrics.title || !lyrics.lyrics) {
         return message.reply({
-          embeds: [lyricEmbed("Unkown", "No Lyrics")],
+          embeds: [lyricEmbed("Unknown", "No Lyrics")],
         });
       }
       return message.reply({

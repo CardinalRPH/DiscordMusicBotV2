@@ -3,7 +3,7 @@ import {
   GuildMember,
   SlashCommandBuilder,
 } from "discord.js";
-import { players, playNextSong } from "../../../AudioFunction/queueManager";
+import { players } from "../../../AudioFunction/queueManager";
 export const data = new SlashCommandBuilder()
   .setName("skip")
   .setDescription("Skip to the next song");
@@ -19,12 +19,10 @@ export const execute = async (interaction: CommandInteraction) => {
   }
   const playerData = players.get(interaction.guildId as string);
 
-  if (playerData?.player && playerData?.subscription) { 
-    if (playerData?.queue.length > 0) {   
-      playerData.player.stop()
-      playerData.queue.shift()
-      playNextSong(interaction.guildId as string)
-      return interaction.reply({ content: "Song Skipped"});
+  if (playerData?.player && playerData?.subscription) {
+    if (playerData?.queue.length > 0) {
+      playerData.player.stop(true);
+      return interaction.reply({ content: "Song Skipped" });
     } else {
       return interaction.reply({ content: "No Songs In Queue" });
     }

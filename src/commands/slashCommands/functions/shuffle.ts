@@ -5,7 +5,6 @@ import {
   type TextChannel,
 } from "discord.js";
 import { players, QueueItem } from "../../../AudioFunction/queueManager";
-import { queueEmbed } from "../../../utils/embedBuilder";
 export const data = new SlashCommandBuilder()
   .setName("shuffle")
   .setDescription("Shuffle Current Queues");
@@ -32,13 +31,16 @@ export const execute = async (interaction: CommandInteraction) => {
       }
       return quues;
     };
-    const oneQueue = playerData.queue[0]
-    const newQueue= [{...oneQueue}, ...shuffleArr(playerData.queue.splice(1))]
-    playerData.queue = newQueue
+    const oneQueue = playerData.queue[0];
+    const newQueue = [
+      { ...oneQueue },
+      ...shuffleArr(playerData.queue.splice(1)),
+    ];
+    playerData.queue = newQueue;
     const textChannel = interaction.channel as TextChannel;
     interaction.reply("Songs Shuffled");
     return await textChannel.send({
-      embeds: [queueEmbed(newQueue)],
+      content: "Shuffled ✅",
     });
   } else {
     return interaction.reply({ content: "No Player Found" });

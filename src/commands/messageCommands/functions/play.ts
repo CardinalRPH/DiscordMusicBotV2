@@ -5,10 +5,6 @@ import {
   joinVoiceChannel,
 } from "@discordjs/voice";
 import { TextChannel, type Message } from "discord.js";
-import uriValidator, {
-  ytPlaylistPattern,
-  ytVideoPattern,
-} from "../../../utils/uriValidator";
 import {
   extractVideoId,
   fetchPlaylist,
@@ -22,6 +18,7 @@ import {
   QueueItem,
 } from "../../../AudioFunction/queueManager";
 import dcConfig from "../../../configs/config";
+import { yt_validate } from "play-dl";
 
 export const data = {
   name: "play",
@@ -42,7 +39,8 @@ export const execute = async (message: Message) => {
   const query = filterQ;
 
   try {
-    if (uriValidator(query as string, ytPlaylistPattern)) {
+    // if (uriValidator(query as string, ytPlaylistPattern)) {
+    if (query.startsWith("https") && yt_validate(query) === "playlist") {
       const playlistList = await fetchPlaylist(query as string);
       const videosDetail = await fetchVideoDetail(
         playlistList.map((val) => val.id),
@@ -100,13 +98,18 @@ export const execute = async (message: Message) => {
         });
       }
       return message.reply("Bad Status Multiple");
-    } else if (uriValidator(query as string, ytVideoPattern)) {
+    } else if (query.startsWith("https") && yt_validate(query) === "video") {
       //do single track
       const videoId = extractVideoId(query as string);
       if (!videoId) {
         return message.reply("Video Not Found");
       }
       const videosDetail = await fetchVideoDetail([videoId], false);
+      if (videosDetail.length <= 0) {
+        return message.reply({
+          content: `No Queues To Play`,
+        });
+      }
       addToQueue(
         message.guildId as string,
         {

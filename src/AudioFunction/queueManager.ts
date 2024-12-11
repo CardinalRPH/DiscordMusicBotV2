@@ -9,8 +9,9 @@ import { validateYouTubeUrl } from "../utils/ytResourceFinder";
 import ytdl from "@distube/ytdl-core";
 // import play from "play-dl";
 import { type Message, type TextChannel } from "discord.js";
-import { musicEmbed } from "../utils/embedBuilder";
-import dcConfig from "../configs/config";
+import { combinedEmbed } from "../utils/embedBuilder";
+import getDataPaging from "../utils/dataPaging";
+import rowButtonBuilder from "../utils/rowButtonBuilder";
 
 export type QueueItem = {
   url: string;
@@ -31,9 +32,9 @@ type PlayerData = {
 };
 
 export const players = new Map<string, PlayerData>();
-const rawCookie = dcConfig.YOUTUBE_COOKIE;
-const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
-const parsedCookie = JSON.parse(cleanCookie);
+// const rawCookie = dcConfig.YOUTUBE_COOKIE;
+// const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
+// const parsedCookie = JSON.parse(cleanCookie);
 //this use for ytdl
 // const rawCookie = dcConfig.YOUTUBE_COOKIE;
 // const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
@@ -67,7 +68,7 @@ export const addToQueue = (
       currentMessage: null,
       subscription: null,
     };
-    playerEvent(newPlayer, textChannel, guildId);
+    playerEvent(newPlayer, guildId, textChannel);
     players.set(guildId, newPlayer);
     console.log(`Created new queue and added ${song.title}`);
   }
@@ -120,25 +121,47 @@ export const playNextSong = async (guildId: string) => {
 
 const playerEvent = (
   player: PlayerData,
-  textChannel: TextChannel,
-  guildId: string
+  guildId: string,
+  textChannel: TextChannel
 ) => {
   player.player.on(AudioPlayerStatus.Playing, async () => {
     const currentSong = player.queue[0];
     console.log("Music queue is now playing.");
     if (currentSong) {
-      const msg = await textChannel.send({
-        embeds: [musicEmbed({ ...currentSong })],
-      });
-      player.currentMessage = msg as Message<true>;
+      const {
+        nextPage,
+        optimizeData,
+        prevPage,
+        totalPage,
+        totalRow,
+        currentPage,
+      } = getDataPaging(player.queue, 1);
+      return (player.currentMessage = await textChannel.send({
+        embeds: [
+          combinedEmbed(
+            { ...currentSong },
+            optimizeData,
+            totalRow,
+            currentPage,
+            totalPage
+          ),
+        ],
+        components: [
+          rowButtonBuilder({
+            next: { toPage: nextPage, disabled: nextPage ? false : true },
+            prev: { toPage: prevPage, disabled: prevPage ? false : true },
+          }),
+        ],
+      }));
+      // player.currentMessage = msg as Message<true>;
     }
   });
   player.player.on(AudioPlayerStatus.Idle, async () => {
     console.log("Music stopped, player is idle.");
-    const currentMessage = player.currentMessage;
+    const currentMessage = player?.currentMessage;
     if (currentMessage) {
       try {
-        await (currentMessage as Message<true>).delete();
+        await currentMessage.delete();
         // console.log("Previous message deleted.");
       } catch (err) {
         console.error("Failed to delete message:", err);

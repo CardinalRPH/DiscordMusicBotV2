@@ -57,7 +57,15 @@ const searchSongLyric = async (q: string) => {
 
 const getSongLyric = async (q: string) => {
   try {
-    const results = await searchSongLyric(q);
+    const cleanQuery = q
+      .replace(
+        /\b(official|video|lyrics|music|hd|hq|4k|remastered|remaster)\b/gi,
+        ""
+      )
+      .replace(/[()\[\]]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const results = await searchSongLyric(cleanQuery);
     if (!results) {
       return null;
     }
@@ -74,4 +82,4 @@ const getSongLyric = async (q: string) => {
   }
 };
 
-export default getSongLyric
+export default getSongLyric;

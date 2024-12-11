@@ -1,6 +1,5 @@
 import { TextChannel, type Message } from "discord.js";
 import { players, type QueueItem } from "../../../AudioFunction/queueManager";
-import { queueEmbed } from "../../../utils/embedBuilder";
 
 export const data = {
   name: "shuffle",
@@ -12,7 +11,7 @@ export const execute = async (message: Message) => {
   const voiceChannel = message.member?.voice.channelId;
 
   if (!voiceChannel) {
-    return message.reply("You Must Be In A Voice Channel To Use This Command.")
+    return message.reply("You Must Be In A Voice Channel To Use This Command.");
   }
 
   const playerData = players.get(message.guildId as string);
@@ -28,17 +27,18 @@ export const execute = async (message: Message) => {
       }
       return quues;
     };
-    const oneQueue = playerData.queue[0]
-    const newQueue= [{...oneQueue}, ...shuffleArr(playerData.queue.splice(1))]
-    playerData.queue = newQueue
+    const oneQueue = playerData.queue[0];
+    const newQueue = [
+      { ...oneQueue },
+      ...shuffleArr(playerData.queue.splice(1)),
+    ];
+    playerData.queue = newQueue;
     const textChannel = message.channel as TextChannel;
     message.reply("Songs Shuffled");
     return await textChannel.send({
-      embeds: [queueEmbed(newQueue)],
+      content: "Shuffled ✅",
     });
   } else {
     return message.reply({ content: "No Player Found" });
   }
 };
-  
-

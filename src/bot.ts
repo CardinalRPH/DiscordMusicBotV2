@@ -11,6 +11,7 @@ import {
 } from "./data/CRUDFunction";
 import defaultPrefix from "./global/prefix";
 import { players } from "./AudioFunction/queueManager";
+import queueBtnExecute from "./commands/buttonCommands/queueBtn";
 
 const client = new Client({
   intents: [
@@ -36,15 +37,17 @@ client.on("guildCreate", async (guild) => {
 });
 
 client.on("interactionCreate", (interaction) => {
-  if (!interaction.isCommand()) {
-    return;
+  if (interaction.isButton()) {
+    return queueBtnExecute(interaction);
   }
 
-  const { commandName } = interaction;
-  if (slashCommands[commandName as keyof typeof slashCommands]) {
-    slashCommands[commandName as keyof typeof slashCommands].execute(
-      interaction
-    );
+  if (interaction.isCommand()) {
+    const { commandName } = interaction;
+    if (slashCommands[commandName as keyof typeof slashCommands]) {
+      slashCommands[commandName as keyof typeof slashCommands].execute(
+        interaction
+      );
+    }
   }
 });
 
@@ -83,11 +86,11 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
     if (playerData) {
       playerData?.player.stop();
       playerData.queue = [];
-      playerData.subscription?.unsubscribe()
-      await playerData.currentMessage?.delete()
-      playerData.currentResource = null
-      playerData.currentMessage = null
-      playerData.subscription = null
+      playerData.subscription?.unsubscribe();
+      await playerData.currentMessage?.delete();
+      playerData.currentResource = null;
+      playerData.currentMessage = null;
+      playerData.subscription = null;
     }
   }
 });

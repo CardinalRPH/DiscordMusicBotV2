@@ -1,43 +1,75 @@
 import axios from "axios";
 import dcConfig from "../configs/config";
 import play from "play-dl";
-interface playlistApiResponse {
-  items: any[];
-  nextPageToken?: string;
-  pageInfo: {
-    totalResults: number;
-    resultsPerPage: number;
-  };
-  kind: string;
-  etag: string;
-}
 
 interface videoApiResponse {
   kind: string;
   etag: string;
-  items: any[];
+  items: {
+    kind: string;
+    etag: string;
+    id: string;
+    snippet: {
+      publishedAt: Date;
+      channelId: string;
+      title: string;
+      description: string;
+      thumbnails: {
+        default: {
+          url: string;
+          width: number;
+          height: number;
+        };
+        medium: {
+          url: string;
+          width: number;
+          height: number;
+        };
+        high: {
+          url: string;
+          width: number;
+          height: number;
+        };
+        standard: {
+          url: string;
+          width: number;
+          height: number;
+        };
+        maxres: {
+          url: string;
+          width: number;
+          height: number;
+        };
+      };
+      channelTitle: string;
+      tags: string[];
+      categoryId: string;
+      liveBroadcastContent: string;
+      localized: {
+        title: string;
+        description: string;
+      };
+    };
+    contentDetails: {
+      duration: string;
+      dimension: string;
+      definition: string;
+      caption: string;
+      licensedContent: boolean;
+      regionRestriction: {
+        blocked?: string[];
+        allowed?: string[];
+      };
+      contentRating: any;
+
+      projection: string;
+    };
+  }[];
   pageInfo: {
     totalResults: number;
     resultsPerPage: number;
   };
 }
-
-interface searchApiResponse {
-  kind: string;
-  etag: string;
-  items: any[];
-  nextPageToken?: string;
-  pageInfo: {
-    totalResults: number;
-    resultsPerPage: number;
-  };
-}
-
-const extractPlaylistId = (url: string) => {
-  const playlistIdRegex = /(?:\/playlist\?list=)([a-zA-Z0-9_-]+)/;
-  const matches = url.match(playlistIdRegex);
-  return matches ? matches[1] : null;
-};
 
 export const extractVideoId = (url: string) => {
   const videoIdRegex =
@@ -66,53 +98,25 @@ const parseISO8601Duration = (isoDuration: string) => {
   return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 };
 
-type playlistType = {
-  id: string;
-  embedImg: string;
-  title: string;
-  singer: string;
-  singerId: string;
-};
-
 export const fetchPlaylist = async (playlistURL: string) => {
-  let playlistItem: playlistType[] = [];
-  const playlistID = extractPlaylistId(playlistURL);
-  let nextPageToken: string | undefined = undefined;
-  const mainURL = dcConfig.YOUTUBE_PLAYLIST_API_URL;
-  let url = dcConfig.YOUTUBE_PLAYLIST_API_URL;
-  do {
-    try {
-      const res = await axios<playlistApiResponse>({
-        method: "GET",
-        url: url,
-        params: {
-          part: "snippet",
-          maxResults: "50",
-          key: dcConfig.YOUTUBE_API_KEY,
-          playlistId: playlistID,
-        },
-      });
-      res.data.items.forEach((value) =>
-        playlistItem.push({
-          id: value?.snippet.resourceId?.videoId,
-          embedImg: value?.snippet.thumbnails.default?.url,
-          title: value?.snippet?.title,
-          singer: value?.snippet?.videoOwnerChannelTitle,
-          singerId: value?.snippet?.videoOwnerChannelId,
-        })
-      );
-      if (res.data.nextPageToken) {
-        nextPageToken = res.data.nextPageToken as string;
-        url = `${mainURL}?pageToken=${nextPageToken}`;
-      } else {
-        nextPageToken = undefined;
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      throw error;
-    }
-  } while (nextPageToken);
-  return playlistItem;
+  try {
+    const playlistInfo = await play.playlist_info(playlistURL, {
+      incomplete: true,
+    });
+    const playlistVideos = await playlistInfo.all_videos();
+    const optimizeData = playlistVideos.map((val) => ({
+      id: val.id || "Unknown",
+      embedImg: val.thumbnails[0].url || "Unknown",
+      title: val.title || "Unknown",
+      singer: val.channel?.name || "Unknown",
+      singerId: val.channel?.id || "Unknown",
+    }));
+    return optimizeData;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw "Video Unavailable Or Deleted E01";
+  }
+  // return playlistItem;
 };
 type fetchVideoType = {
   videoId: string;
@@ -150,18 +154,26 @@ export const fetchVideoDetail = async (
       const results = await Promise.all(fetchPromise);
 
       const durations: fetchVideoType[] = results.flatMap((res) =>
-        res.data.items.map((item: any) => ({
-          videoId: item.id,
-          duration: parseISO8601Duration(item.contentDetails.duration),
-          embedImg: item.snippet.thumbnails.default.url,
-          title: item.snippet.title,
-          singer: item.snippet.channelTitle,
-          singerId: item.snippet.channelId,
-        }))
+        res.data.items
+          .map((item) => ({
+            videoId: item.id,
+            duration: parseISO8601Duration(item.contentDetails.duration),
+            embedImg: item.snippet.thumbnails.default.url,
+            title: item.snippet.title,
+            singer: item.snippet.channelTitle,
+            singerId: item.snippet.channelId,
+            isBlocked:
+              item.contentDetails.regionRestriction?.blocked &&
+              item.contentDetails.regionRestriction.blocked.length > 0
+                ? true
+                : false,
+          }))
+          .filter((val) => val.isBlocked === false)
       );
       return durations;
     } catch (error) {
-      throw error;
+      console.error(error);
+      throw "Video Unavailable Or Deleted E02";
     }
   } else {
     try {
@@ -174,19 +186,26 @@ export const fetchVideoDetail = async (
           id: videoIds.join(","),
         },
       });
-      const duration: fetchVideoType[] = res.data.items.map((item: any) => ({
-        videoId: item.id,
-        duration: parseISO8601Duration(item.contentDetails.duration),
-        embedImg: item.snippet.thumbnails.default.url,
-        title: item.snippet.title,
-        singer: item.snippet.channelTitle,
-        singerId: item.snippet.channelId,
-      }));
+      const duration: fetchVideoType[] = res.data.items
+        .map((item: any) => ({
+          videoId: item.id,
+          duration: parseISO8601Duration(item.contentDetails.duration),
+          embedImg: item.snippet.thumbnails.default.url,
+          title: item.snippet.title,
+          singer: item.snippet.channelTitle,
+          singerId: item.snippet.channelId,
+          isBlocked:
+            item.contentDetails.regionRestriction?.blocked &&
+            item.contentDetails.regionRestriction.blocked.length > 0
+              ? true
+              : false,
+        }))
+        .filter((val) => val.isBlocked === false);
 
       return duration;
     } catch (error) {
       console.error("Error fetching data:", error);
-      throw error;
+      throw "Video Unavailable Or Deleted E03";
     }
   }
 };
@@ -223,6 +242,6 @@ export const fetchSearchVideo = async (q: string) => {
     // }
   } catch (error) {
     console.error("Error fetching data:", error);
-    throw error;
+    throw "Video Unavailable Or Deleted E04";
   }
 };

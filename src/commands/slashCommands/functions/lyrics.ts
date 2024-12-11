@@ -38,7 +38,7 @@ export const execute = async (interaction: CommandInteraction) => {
       const lyrics = await getSongLyric(currentSongTitle)
       if (!lyrics || !lyrics.title || !lyrics.lyrics) {
         return interaction.reply({
-          embeds:[lyricEmbed("Unkown", "No Lyrics")]
+          embeds:[lyricEmbed("Unknown", "No Lyrics")]
         })
       }
       return interaction.reply({

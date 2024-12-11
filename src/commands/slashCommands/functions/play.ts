@@ -27,6 +27,7 @@ import {
   getVoiceConnection,
   joinVoiceChannel,
 } from "@discordjs/voice";
+import { yt_validate } from "play-dl";
 
 export const data = new SlashCommandBuilder()
   .setName("play")
@@ -51,10 +52,10 @@ export const execute = async (interaction: CommandInteraction) => {
     });
   }
 
-  const query = interaction.options.get("query-music")?.value;
+  const query = interaction.options.get("query-music")?.value as string;
 
   try {
-    if (uriValidator(query as string, ytPlaylistPattern)) {
+    if (query.startsWith("https") && yt_validate(query) === "playlist") {
       const playlistList = await fetchPlaylist(query as string);
       const videosDetail = await fetchVideoDetail(
         playlistList.map((val) => val.id),
@@ -112,13 +113,18 @@ export const execute = async (interaction: CommandInteraction) => {
         });
       }
       return interaction.reply("Bad Status Multiple");
-    } else if (uriValidator(query as string, ytVideoPattern)) {
+    } else if (query.startsWith("https") && yt_validate(query) === "playlist") {
       //do single track
       const videoId = extractVideoId(query as string);
       if (!videoId) {
         return interaction.reply("Video Not Found");
       }
       const videosDetail = await fetchVideoDetail([videoId], false);
+      if (videosDetail.length <= 0) {
+        return interaction.reply({
+          content: `No Queues To Play`,
+        });
+      }
       addToQueue(
         interaction.guildId as string,
         {
