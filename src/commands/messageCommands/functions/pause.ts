@@ -12,7 +12,7 @@ export const execute = (message: Message) => {
   const voiceChannel = message.member?.voice.channelId;
 
   if (!voiceChannel) {
-    return message.reply("You Must Be In A Voice Channel To Use This Command.")
+    return message.reply("You Must Be In A Voice Channel To Use This Command.");
   }
 
   try {
@@ -45,5 +45,4 @@ export const execute = (message: Message) => {
     message.reply("Something went Wrong");
     console.error(error);
   }
-  
 };

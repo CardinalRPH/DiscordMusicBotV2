@@ -12,7 +12,7 @@ export const execute = async (message: Message) => {
   const voiceChannel = message.member?.voice.channelId;
 
   if (!voiceChannel) {
-    return message.reply("You Must Be In A Voice Channel To Use This Command.")
+    return message.reply("You Must Be In A Voice Channel To Use This Command.");
   }
 
   try {
@@ -33,7 +33,7 @@ export const execute = async (message: Message) => {
       }
       if (playerData.player.state.status === AudioPlayerStatus.Idle) {
         if (playerData.queue.length > 0) {
-          playNextSong(message.guildId as string)
+          playNextSong(message.guildId as string);
           return message.reply({
             content: "Song Played",
           });
@@ -52,5 +52,4 @@ export const execute = async (message: Message) => {
     message.reply("Something went Wrong");
     console.error(error);
   }
-  
 };

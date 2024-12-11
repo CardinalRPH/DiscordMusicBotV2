@@ -39,9 +39,7 @@ export const execute = async (interaction: CommandInteraction) => {
         title: "iris",
         singer: "Goo Goo Dolls",
         duration: "00:04:50",
-        requestBy: interaction.member
-          ? member.user.id
-          : "System",
+        requestBy: interaction.member ? member.user.id : "System",
         embedImg:
           "https://i.scdn.co/image/ab67616d0000b273eda9478c39a21e1cdc6609ca",
         singerId: null,
@@ -82,9 +80,7 @@ export const execute = async (interaction: CommandInteraction) => {
       title: "iris",
       singer: "Goo Goo Dolls",
       duration: "00:04:50",
-      requestBy: interaction.member
-        ? member.user.id
-        : "System",
+      requestBy: interaction.member ? member.user.id : "System",
       embedImg:
         "https://i.scdn.co/image/ab67616d0000b273eda9478c39a21e1cdc6609ca",
       singerId: null,

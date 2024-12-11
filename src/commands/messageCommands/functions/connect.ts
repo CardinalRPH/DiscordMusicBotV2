@@ -1,4 +1,8 @@
-import { DiscordGatewayAdapterCreator, getVoiceConnection, joinVoiceChannel } from "@discordjs/voice";
+import {
+  DiscordGatewayAdapterCreator,
+  getVoiceConnection,
+  joinVoiceChannel,
+} from "@discordjs/voice";
 import { type Message } from "discord.js";
 
 export const data = {
@@ -11,10 +15,10 @@ export const execute = (message: Message) => {
   const voiceChannel = message.member?.voice.channelId;
 
   if (!voiceChannel) {
-    return message.reply("You Must Be In A Voice Channel To Use This Command.")
+    return message.reply("You Must Be In A Voice Channel To Use This Command.");
   }
 
-  const voiceConnection = getVoiceConnection(message.guildId as string)
+  const voiceConnection = getVoiceConnection(message.guildId as string);
   if (voiceConnection) {
     return message.reply("The Bot Is Already In A Voice Channel.");
   }
@@ -22,9 +26,11 @@ export const execute = (message: Message) => {
   joinVoiceChannel({
     channelId: voiceChannel,
     guildId: message.guildId as string,
-    adapterCreator: message.guild?.voiceAdapterCreator as DiscordGatewayAdapterCreator
-  })
+    adapterCreator: message.guild
+      ?.voiceAdapterCreator as DiscordGatewayAdapterCreator,
+  });
 
-  return message.reply(`Joined To Voice Channel ${message.member.voice.channel?.name}`);
-  
+  return message.reply(
+    `Joined To Voice Channel ${message.member.voice.channel?.name}`
+  );
 };

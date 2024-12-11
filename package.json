@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",
     "start": "node dist/index.js",
-    "build": "tsup src/ --minify"
+    "build": "tsup src/ --minify",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix"
   },
   "author": "CardinalRPH",
   "license": "ISC",
@@ -24,10 +26,20 @@
     "play-dl": "^1.9.7"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.16.0",
+    "@typescript-eslint/eslint-plugin": "^8.13.0",
+    "@typescript-eslint/parser": "^8.13.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.13.0",
     "nodemon": "^3.1.7",
+    "prettier-eslint": "^16.3.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.3.0",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.18.0"
   }
 }

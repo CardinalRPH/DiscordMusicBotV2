@@ -7,6 +7,6 @@ export const data = {
 };
 
 export const execute = (message: Message) => {
-  const latency = message.client.ws.ping
+  const latency = message.client.ws.ping;
   return message.reply(`Ponga! ${Math.round(latency)}ms`);
 };

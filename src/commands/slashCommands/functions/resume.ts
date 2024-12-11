@@ -39,7 +39,7 @@ export const execute = async (interaction: CommandInteraction) => {
       }
       if (playerData.player.state.status === AudioPlayerStatus.Idle) {
         if (playerData.queue.length > 0) {
-          playNextSong(interaction.guildId as string)
+          playNextSong(interaction.guildId as string);
           // const textChannel = interaction.channel as TextChannel
           // const msg = await textChannel.send({
           //   embeds: [musicEmbed({ ...playerData.queue[0] })],

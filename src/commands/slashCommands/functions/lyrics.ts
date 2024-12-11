@@ -34,16 +34,16 @@ export const execute = async (interaction: CommandInteraction) => {
     }
 
     if (playerData?.player && playerData?.subscription) {
-      const currentSongTitle = playerData.queue[0].title
-      const lyrics = await getSongLyric(currentSongTitle)
+      const currentSongTitle = playerData.queue[0].title;
+      const lyrics = await getSongLyric(currentSongTitle);
       if (!lyrics || !lyrics.title || !lyrics.lyrics) {
         return interaction.reply({
-          embeds:[lyricEmbed("Unknown", "No Lyrics")]
-        })
+          embeds: [lyricEmbed("Unknown", "No Lyrics")],
+        });
       }
       return interaction.reply({
-        embeds:[lyricEmbed(lyrics?.title, lyrics.lyrics)]
-      })
+        embeds: [lyricEmbed(lyrics?.title, lyrics.lyrics)],
+      });
     } else {
       return interaction.reply({ content: "No Player Found" });
     }

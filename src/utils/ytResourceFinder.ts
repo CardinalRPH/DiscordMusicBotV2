@@ -222,24 +222,6 @@ export const fetchSearchVideo = async (q: string) => {
       singer: playSrc[0].channel?.name,
       singerId: playSrc[0].channel?.id,
     };
-    // const res = await axios<searchApiResponse>({
-    //   method: "GET",
-    //   url: dcConfig.YOUTUBE_SEARCH_API_URL,
-    //   params: {
-    //     key: dcConfig.YOUTUBE_API_KEY,
-    //     q: q,
-    //     type: "video",
-    //     maxResults: 1,
-    //     part: "snippet",
-    //   },
-    // });
-    // return {
-    //   id: res.data.items[0].id.videoId,
-    //   embedImg: res.data.items[0].snippet.thumbnails.default.url,
-    //   title: res.data.items[0].snippet.title,
-    //   singer: res.data.items[0].snippet.channelTitle,
-    //   singerId: res.data.items[0].snippet.channelId,
-    // }
   } catch (error) {
     console.error("Error fetching data:", error);
     throw "Video Unavailable Or Deleted E04";

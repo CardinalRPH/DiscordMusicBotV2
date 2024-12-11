@@ -1,8 +1,8 @@
-import { config } from "dotenv"
+import { config } from "dotenv";
 
-config()
+config();
 
-const getEnvVar = (key: string, defaultValue: string = ""): string => {
+const getEnvVar = (key: string): string => {
   const value = process.env[key];
   if (!value) {
     throw new Error(`Missing environment variable: ${key}`);
@@ -23,6 +23,7 @@ const dcConfig = {
   GENIUS_SEARCH_URL: getEnvVar("GENIUS_SEARCH_URL"),
   GENIUS_AUTH: getEnvVar("GENIUS_AUTH"),
   YOUTUBE_COOKIE: getEnvVar("YOUTUBE_COOKIE"),
+  YOUTUBE_USER_AGENT: getEnvVar("YOUTUBE_USER_AGENT"),
 };
 
-export default dcConfig
+export default dcConfig;

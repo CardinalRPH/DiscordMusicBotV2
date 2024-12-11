@@ -4,10 +4,6 @@ import {
   SlashCommandBuilder,
   TextChannel,
 } from "discord.js";
-import uriValidator, {
-  ytPlaylistPattern,
-  ytVideoPattern,
-} from "../../../utils/uriValidator";
 import {
   extractVideoId,
   fetchPlaylist,

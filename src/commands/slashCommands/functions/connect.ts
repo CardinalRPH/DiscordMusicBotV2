@@ -3,7 +3,11 @@ import {
   GuildMember,
   SlashCommandBuilder,
 } from "discord.js";
-import { DiscordGatewayAdapterCreator, getVoiceConnection, joinVoiceChannel } from "@discordjs/voice";
+import {
+  DiscordGatewayAdapterCreator,
+  getVoiceConnection,
+  joinVoiceChannel,
+} from "@discordjs/voice";
 export const data = new SlashCommandBuilder()
   .setName("connect")
   .setDescription("Connect To A Voice Channel");
@@ -18,7 +22,7 @@ export const execute = (interaction: CommandInteraction) => {
     });
   }
 
-  const voiceConnection = getVoiceConnection(interaction.guildId as string)
+  const voiceConnection = getVoiceConnection(interaction.guildId as string);
   if (voiceConnection) {
     return interaction.reply({
       content: "The Bot Is Already In A Voice Channel.",
@@ -28,7 +32,10 @@ export const execute = (interaction: CommandInteraction) => {
   joinVoiceChannel({
     channelId: voiceChannel,
     guildId: interaction.guildId as string,
-    adapterCreator:interaction.guild?.voiceAdapterCreator as DiscordGatewayAdapterCreator
-  })
-  return interaction.reply(`Joined To Voice Channel ${member.voice.channel.name}`);
+    adapterCreator: interaction.guild
+      ?.voiceAdapterCreator as DiscordGatewayAdapterCreator,
+  });
+  return interaction.reply(
+    `Joined To Voice Channel ${member.voice.channel.name}`
+  );
 };

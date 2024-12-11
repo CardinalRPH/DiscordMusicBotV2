@@ -5,7 +5,7 @@ const manager = new ShardingManager("./src/bot.ts", {
   totalShards: "auto",
   token: dcConfig.DISCORD_TOKEN,
   execArgv: ["-r", "ts-node/register"],
-  respawn: true
+  respawn: true,
 });
 
 manager.on("shardCreate", (shard) => {
@@ -27,4 +27,6 @@ manager.on("shardCreate", (shard) => {
   });
 });
 
-manager.spawn({ amount: 'auto', delay: 15500, timeout: 120000 }).catch(e => console.log(e))
+manager
+  .spawn({ amount: "auto", delay: 15500, timeout: 120000 })
+  .catch((e) => console.log(e));
