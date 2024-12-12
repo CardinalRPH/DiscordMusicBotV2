@@ -39,6 +39,10 @@ export const execute = async (message: Message) => {
   const filterQ = message.content.split(" ").slice(1).join(" ");
   const query = filterQ;
 
+  if (!query || query === undefined || query === "") {
+    return message.reply("You Must Provide A Query To Play Music.");
+  }
+
   try {
     // if (uriValidator(query as string, ytPlaylistPattern)) {
     if (query.startsWith("https") && yt_validate(query) === "playlist") {

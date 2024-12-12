@@ -2,9 +2,9 @@ import { type Message } from "discord.js";
 import { players } from "../../../AudioFunction/queueManager";
 
 export const data = {
-  name: "skipto",
-  description: "Skip to the next song",
-  shortCut: null,
+  name: "remove",
+  description: "Remove Some Song",
+  shortCut: "rm",
 };
 
 export const execute = async (message: Message) => {
@@ -33,7 +33,7 @@ export const execute = async (message: Message) => {
           content: "Cant Skip To Current Song Again",
         });
       }
-      const skipedQueue = playerData.queue.slice(query - 1);
+      const skipedQueue = playerData.queue.splice(query - 1, 1);
       playerData.queue = [firstQueue, ...skipedQueue];
       playerData.player.stop(true);
       return message.reply({ content: "Song Skipped" });
