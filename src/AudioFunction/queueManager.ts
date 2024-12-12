@@ -110,7 +110,7 @@ export const playNextSong = async (guildId: string) => {
 
       // console.log(`Playing next song: ${nextSong!.title}`);
     } else {
-      console.log(`No more songs in the queue for guild ${guildId}`);
+      // console.log(`No more songs in the queue for guild ${guildId}`);
     }
   } catch (error) {
     console.log("AH shet Error");

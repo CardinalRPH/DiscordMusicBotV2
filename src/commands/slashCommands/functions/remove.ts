@@ -1,4 +1,4 @@
-import type { GuildMember } from "discord.js";
+import type { GuildMember, Message } from "discord.js";
 import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { players } from "../../../AudioFunction/queueManager";
 import getDataPaging from "../../../utils/dataPaging";
@@ -30,15 +30,16 @@ export const execute = async (interaction: CommandInteraction) => {
     if (playerData?.queue.length > 0) {
       const firstQueue = playerData.queue[0];
       if (query > playerData.queue.length || playerData.queue.length === 1) {
-        return interaction.reply({ content: "Cant Skip More Than Queues" });
+        return interaction.reply({ content: "Cant Remove More Than Queues" });
       }
       if (query === 1) {
         return interaction.reply({
-          content: "Cant Skip To Current Song Again",
+          content: "Cant Remove To Current Song",
         });
       }
-      const skipedQueue = playerData.queue.splice(query - 1, 1);
-      playerData.queue = [firstQueue, ...skipedQueue];
+      playerData.queue.splice(query - 1, 1);
+      const removedQueue = playerData.queue.slice(1);
+      playerData.queue = [firstQueue, ...removedQueue];
       const {
         nextPage,
         optimizeData,
@@ -48,10 +49,13 @@ export const execute = async (interaction: CommandInteraction) => {
         currentPage,
       } = getDataPaging(playerData.queue, 1);
       const currentSong = playerData.queue[0];
-      await playerData.currentMessage?.edit({
+      if (playerData.currentMessage) {
+        await playerData.currentMessage.delete();
+      }
+      return (playerData.currentMessage = (await interaction.reply({
         embeds: [
           combinedEmbed(
-            currentSong,
+            { ...currentSong },
             optimizeData,
             totalRow,
             currentPage,
@@ -60,14 +64,13 @@ export const execute = async (interaction: CommandInteraction) => {
         ],
         components: [
           rowButtonBuilder({
-            next: { toPage: nextPage, disabled: !nextPage },
-            prev: { toPage: prevPage, disabled: !prevPage },
-            shuffle: { disabled: playerData.queue.length <= 2 },
-            skip: { disabled: playerData.queue.length <= 1 },
+            next: { toPage: nextPage, disabled: nextPage ? false : true },
+            prev: { toPage: prevPage, disabled: prevPage ? false : true },
+            shuffle: { disabled: playerData.queue.length > 2 ? false : true },
+            skip: { disabled: playerData.queue.length > 1 ? false : true },
           }),
         ],
-      });
-      return interaction.reply({ content: "Song Skipped" });
+      })) as unknown as Message<true>);
     } else {
       return interaction.reply({ content: "No Songs In Queue" });
     }

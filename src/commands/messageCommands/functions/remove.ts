@@ -29,15 +29,16 @@ export const execute = async (message: Message) => {
     if (playerData?.queue.length > 0) {
       const firstQueue = playerData.queue[0];
       if (query > playerData.queue.length || playerData.queue.length === 1) {
-        return message.reply("Cant Skip More Than Queues");
+        return message.reply("Cant Remove More Than Queues");
       }
       if (query === 1) {
         return message.reply({
-          content: "Cant Skip To Current Song Again",
+          content: "Cant Remove To Current Song",
         });
       }
-      const skipedQueue = playerData.queue.splice(query - 1, 1);
-      playerData.queue = [firstQueue, ...skipedQueue];
+      playerData.queue.splice(query - 1, 1);
+      const removedQueue = playerData.queue.slice(1);
+      playerData.queue = [firstQueue, ...removedQueue];
       const {
         nextPage,
         optimizeData,
@@ -47,10 +48,13 @@ export const execute = async (message: Message) => {
         currentPage,
       } = getDataPaging(playerData.queue, 1);
       const currentSong = playerData.queue[0];
-      await playerData.currentMessage?.edit({
+      if (playerData.currentMessage) {
+        await playerData.currentMessage.delete();
+      }
+      return (playerData.currentMessage = (await message.reply({
         embeds: [
           combinedEmbed(
-            currentSong,
+            { ...currentSong },
             optimizeData,
             totalRow,
             currentPage,
@@ -59,13 +63,13 @@ export const execute = async (message: Message) => {
         ],
         components: [
           rowButtonBuilder({
-            next: { toPage: nextPage, disabled: !nextPage },
-            prev: { toPage: prevPage, disabled: !prevPage },
-            shuffle: { disabled: playerData.queue.length <= 2 },
-            skip: { disabled: playerData.queue.length <= 1 },
+            next: { toPage: nextPage, disabled: nextPage ? false : true },
+            prev: { toPage: prevPage, disabled: prevPage ? false : true },
+            shuffle: { disabled: playerData.queue.length > 2 ? false : true },
+            skip: { disabled: playerData.queue.length > 1 ? false : true },
           }),
         ],
-      });
+      })) as Message<true>);
     } else {
       return message.reply({ content: "No Songs In Queue" });
     }

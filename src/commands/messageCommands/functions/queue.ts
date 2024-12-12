@@ -1,6 +1,6 @@
 import { type Message } from "discord.js";
 import { players } from "../../../AudioFunction/queueManager";
-import { combinedEmbed, queueEmbed } from "../../../utils/embedBuilder";
+import { combinedEmbed } from "../../../utils/embedBuilder";
 import getDataPaging from "../../../utils/dataPaging";
 import rowButtonBuilder from "../../../utils/rowButtonBuilder";
 
@@ -34,28 +34,17 @@ export const execute = async (message: Message) => {
     const currentSong = playerData.queue[0];
     if (playerData.currentMessage) {
       await playerData.currentMessage.delete();
-      return (playerData.currentMessage = (await message.reply({
-        embeds: [
-          combinedEmbed(
-            { ...currentSong },
-            optimizeData,
-            totalRow,
-            currentPage,
-            totalPage
-          ),
-        ],
-        components: [
-          rowButtonBuilder({
-            next: { toPage: nextPage, disabled: nextPage ? false : true },
-            prev: { toPage: prevPage, disabled: prevPage ? false : true },
-            shuffle: { disabled: playerData.queue.length > 2 ? false : true },
-            skip: { disabled: playerData.queue.length > 1 ? false : true },
-          }),
-        ],
-      })) as Message<true>);
     }
-    return message.reply({
-      embeds: [queueEmbed(optimizeData, totalRow, currentPage, totalPage)],
+    return (playerData.currentMessage = (await message.reply({
+      embeds: [
+        combinedEmbed(
+          { ...currentSong },
+          optimizeData,
+          totalRow,
+          currentPage,
+          totalPage
+        ),
+      ],
       components: [
         rowButtonBuilder({
           next: { toPage: nextPage, disabled: nextPage ? false : true },
@@ -64,7 +53,7 @@ export const execute = async (message: Message) => {
           skip: { disabled: playerData.queue.length > 1 ? false : true },
         }),
       ],
-    });
+    })) as Message<true>);
   } else {
     return message.reply({ content: "No Player Found" });
   }
