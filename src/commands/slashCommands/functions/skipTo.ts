@@ -29,6 +29,11 @@ export const execute = async (interaction: CommandInteraction) => {
       if (query > playerData.queue.length || playerData.queue.length === 1) {
         return interaction.reply({ content: "Cant Skip More Than Queues" });
       }
+      if (query === 1) {
+        return interaction.reply({
+          content: "Cant Skip To Current Song Again",
+        });
+      }
       const skipedQueue = playerData.queue.slice(query - 1);
       playerData.queue = [firstQueue, ...skipedQueue];
       playerData.player.stop(true);
