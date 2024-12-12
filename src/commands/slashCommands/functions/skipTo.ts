@@ -26,7 +26,7 @@ export const execute = async (interaction: CommandInteraction) => {
   if (playerData?.player && playerData?.subscription) {
     if (playerData?.queue.length > 0) {
       const firstQueue = playerData.queue[0];
-      if (query > playerData.queue.length) {
+      if (query > playerData.queue.length || playerData.queue.length === 1) {
         return interaction.reply({ content: "Cant Skip More Than Queues" });
       }
       const skipedQueue = playerData.queue.slice(query - 1);

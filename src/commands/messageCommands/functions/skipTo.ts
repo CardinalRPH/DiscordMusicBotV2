@@ -21,7 +21,7 @@ export const execute = async (message: Message) => {
   if (playerData?.player && playerData?.subscription) {
     if (playerData?.queue.length > 0) {
       const firstQueue = playerData.queue[0];
-      if (query > playerData.queue.length) {
+      if (query > playerData.queue.length || playerData.queue.length === 1) {
         return message.reply("Cant Skip More Than Queues");
       }
       const skipedQueue = playerData.queue.slice(query - 1);
