@@ -12,6 +12,7 @@ import {
 import defaultPrefix from "./global/prefix";
 import { players } from "./AudioFunction/queueManager";
 import deployBtnCommands from "./commands/buttonCommands/deployBtnCommands";
+import { getVoiceConnection } from "@discordjs/voice";
 
 const client = new Client({
   intents: [
@@ -22,6 +23,8 @@ const client = new Client({
     IntentsBitField.Flags.GuildVoiceStates,
   ],
 });
+
+const disconnectTimers = new Map<string, NodeJS.Timeout>();
 
 client.once("ready", async () => {
   const guildId = getAllID();
@@ -82,8 +85,9 @@ client.on("messageCreate", (message) => {
 });
 
 client.on("voiceStateUpdate", async (oldState, newState) => {
+  const guildId = oldState.guild.id;
   if (oldState.channelId && !newState.channelId && oldState.member?.user.bot) {
-    const playerData = players.get(oldState.guild.id);
+    const playerData = players.get(guildId);
     if (playerData) {
       playerData?.player.stop();
       playerData.queue = [];
@@ -92,6 +96,37 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
       playerData.currentResource = null;
       playerData.currentMessage = null;
       playerData.subscription = null;
+    }
+    return;
+  }
+  const voiceChannel = oldState.channel || newState.channel;
+  if (voiceChannel?.members.filter((member) => !member.user.bot).size === 0) {
+    if (!disconnectTimers.has(guildId)) {
+      const timer = setTimeout(async () => {
+        const playerData = players.get(guildId);
+        if (playerData) {
+          const voiceConnection = getVoiceConnection(guildId);
+          playerData.player.stop();
+          playerData.queue = [];
+          playerData.subscription?.unsubscribe();
+          await playerData.currentMessage?.delete();
+          playerData.currentResource = null;
+          playerData.currentMessage = null;
+          playerData.subscription = null;
+          if (voiceConnection) {
+            voiceConnection.destroy();
+          }
+        }
+        disconnectTimers.delete(guildId);
+      }, 60000);
+
+      disconnectTimers.set(guildId, timer);
+    }
+  } else {
+    const timer = disconnectTimers.get(guildId);
+    if (timer) {
+      clearTimeout(timer);
+      disconnectTimers.delete(guildId);
     }
   }
 });
