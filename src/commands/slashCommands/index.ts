@@ -10,6 +10,7 @@ import * as resume from "./functions/resume";
 import * as shuffle from "./functions/shuffle";
 import * as lyrics from "./functions/lyrics";
 import * as skipTo from "./functions/skipTo";
+import * as remove from "./functions/remove";
 // import * as stop from "./functions/stop"
 const slashCommands = {
   ping: ping,
@@ -24,6 +25,7 @@ const slashCommands = {
   shuffle: shuffle,
   lyrics: lyrics,
   "skip-to": skipTo,
+  remove: remove,
   // stop: stop
 };
 
