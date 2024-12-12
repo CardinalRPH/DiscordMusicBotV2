@@ -40,7 +40,7 @@ const rowButtonBuilder = (data: rowButtonType) => {
       .setCustomId("skip-btn")
       .setDisabled(data.skip.disabled),
     new ButtonBuilder()
-      .setLabel(">")
+      .setLabel("Shuffle")
       .setStyle(ButtonStyle.Primary)
       .setCustomId("shuffle-btn")
       .setDisabled(data.shuffle.disabled)
