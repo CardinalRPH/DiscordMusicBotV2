@@ -9,6 +9,7 @@ import * as queue from "./functions/queue";
 import * as skip from "./functions/skip";
 import * as shuffle from "./functions/shuffle";
 import * as lyrics from "./functions/lyrics";
+import * as skipTo from "./functions/skipTo";
 // import * as stop from "./functions/stop";
 
 const messageCommands = new Map<
@@ -27,6 +28,7 @@ const commands = [
   skip,
   shuffle,
   lyrics,
+  skipTo,
   // stop
 ];
 commands.forEach((command) => {

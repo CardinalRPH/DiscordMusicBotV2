@@ -37,12 +37,12 @@ const rowButtonBuilder = (data: rowButtonType) => {
     new ButtonBuilder()
       .setLabel("Skip")
       .setStyle(ButtonStyle.Primary)
-      .setCustomId("skip-btn")
+      .setCustomId(JSON.stringify({ action: "skip-btn" }))
       .setDisabled(data.skip.disabled),
     new ButtonBuilder()
       .setLabel("Shuffle")
       .setStyle(ButtonStyle.Primary)
-      .setCustomId("shuffle-btn")
+      .setCustomId(JSON.stringify({ action: "shuffle-btn" }))
       .setDisabled(data.shuffle.disabled)
   );
   return rowButton;

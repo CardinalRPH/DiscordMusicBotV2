@@ -143,7 +143,7 @@ export const execute = async (message: Message) => {
       });
 
       if (!playerData?.currentResource && playerData?.player) {
-        console.log("============================");
+        // console.log("============================");
         playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(message.guildId as string);
 
@@ -189,7 +189,7 @@ export const execute = async (message: Message) => {
       });
 
       if (!playerData?.currentResource && playerData?.player) {
-        console.log("============================");
+        // console.log("============================");
         playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(message.guildId as string);
 

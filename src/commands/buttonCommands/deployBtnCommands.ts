@@ -1,6 +1,7 @@
 import type { ButtonInteraction, GuildMember } from "discord.js";
 import { players } from "../../AudioFunction/queueManager";
 import buttonHandlers from ".";
+import type { ButtonActionHandler } from "./types";
 
 export const deployBtnCommands = async (interaction: ButtonInteraction) => {
   const validateVoiceChannel = async (interaction: ButtonInteraction) => {
@@ -23,9 +24,17 @@ export const deployBtnCommands = async (interaction: ButtonInteraction) => {
   if (!playerData?.player || !playerData.subscription) {
     return interaction.reply({ content: "No Player Found" });
   }
-
-  const customId = interaction.customId;
-  const handler = buttonHandlers[customId];
+  let handler: ButtonActionHandler | null = null;
+  try {
+    const customId: { action: string } = JSON.parse(interaction.customId);
+    handler = buttonHandlers[customId.action];
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({
+      content: "An error occurred while processing the button.",
+      ephemeral: true,
+    });
+  }
 
   if (handler) {
     try {

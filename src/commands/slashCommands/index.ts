@@ -9,6 +9,7 @@ import * as pause from "./functions/pause";
 import * as resume from "./functions/resume";
 import * as shuffle from "./functions/shuffle";
 import * as lyrics from "./functions/lyrics";
+import * as skipTo from "./functions/skipTo";
 // import * as stop from "./functions/stop"
 const slashCommands = {
   ping: ping,
@@ -22,6 +23,7 @@ const slashCommands = {
   resume: resume,
   shuffle: shuffle,
   lyrics: lyrics,
+  "skip-to": skipTo,
   // stop: stop
 };
 

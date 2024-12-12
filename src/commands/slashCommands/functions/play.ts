@@ -149,7 +149,7 @@ export const execute = async (interaction: CommandInteraction) => {
       });
 
       if (!playerData?.currentResource && playerData?.player) {
-        console.log("============================");
+        // console.log("============================");
         playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(interaction.guildId as string);
 
@@ -195,7 +195,7 @@ export const execute = async (interaction: CommandInteraction) => {
       });
 
       if (!playerData?.currentResource && playerData?.player) {
-        console.log("============================");
+        // console.log("============================");
         playerData.subscription = voiceConn.subscribe(playerData?.player);
         await playNextSong(interaction.guildId as string);
 

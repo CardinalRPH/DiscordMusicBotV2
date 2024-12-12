@@ -34,11 +34,11 @@ export const queueEmbed = (
 ) => {
   const convQueue = queue
     .map((value, index) => {
-      return `[${
+      return `${
         page > 1
           ? index + 1 + (MAX_QUEUE_OUTPUT * page - MAX_QUEUE_OUTPUT)
           : index + 1
-      }] ${value.title} : ${value.duration}`;
+      }. ${value.title} : ${value.duration}`;
     })
     .join("\n");
   const embeder = new EmbedBuilder()
@@ -78,11 +78,11 @@ export const combinedEmbed = (
 ) => {
   const convQueue = queue
     .map((value, index) => {
-      return `[${
+      return `${
         page > 1
           ? index + 1 + (MAX_QUEUE_OUTPUT * page - MAX_QUEUE_OUTPUT)
           : index + 1
-      }] ${value.title} : ${value.duration}`;
+      }. ${value.title} : ${value.duration}`;
     })
     .join("\n");
   const embeder = new EmbedBuilder()

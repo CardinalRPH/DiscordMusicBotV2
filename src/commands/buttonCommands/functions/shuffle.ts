@@ -45,7 +45,7 @@ const shuffleBtn: ButtonActionHandler = async (interaction, playerData) => {
     ],
   });
 
-  return interaction.deferUpdate();
+  return interaction.deferUpdate().then(() => {});
 };
 
 export default shuffleBtn;

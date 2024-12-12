@@ -58,7 +58,7 @@ export const addToQueue = (
   const playerData = players.get(guildId);
   if (playerData) {
     playerData.queue.push(song);
-    console.log(`Added ${song.title} to the queue`);
+    // console.log(`Added ${song.title} to the queue`);
   } else {
     // Create a new player and queue if it doesn't exist
     const newPlayer: PlayerData = {
@@ -70,7 +70,7 @@ export const addToQueue = (
     };
     playerEvent(newPlayer, guildId, textChannel);
     players.set(guildId, newPlayer);
-    console.log(`Created new queue and added ${song.title}`);
+    // console.log(`Created new queue and added ${song.title}`);
   }
 };
 
@@ -80,7 +80,7 @@ export const playNextSong = async (guildId: string) => {
     if (playerData && playerData.queue.length > 0) {
       const nextSong = playerData.queue[0]; // Ambil lagu pertama dari queue
       let resource: AudioResource;
-      console.log(nextSong?.url);
+      // console.log(nextSong?.url);
 
       if (validateYouTubeUrl(nextSong?.url as string)) {
         //use for play-dl
@@ -108,7 +108,7 @@ export const playNextSong = async (guildId: string) => {
       playerData.player.play(resource); // Mainkan lagu
       playerData.currentResource = resource;
 
-      console.log(`Playing next song: ${nextSong!.title}`);
+      // console.log(`Playing next song: ${nextSong!.title}`);
     } else {
       console.log(`No more songs in the queue for guild ${guildId}`);
     }
@@ -126,7 +126,7 @@ const playerEvent = (
 ) => {
   player.player.on(AudioPlayerStatus.Playing, async () => {
     const currentSong = player.queue[0];
-    console.log("Music queue is now playing.");
+    // console.log("Music queue is now playing.");
     if (currentSong) {
       const {
         nextPage,
@@ -159,7 +159,7 @@ const playerEvent = (
     }
   });
   player.player.on(AudioPlayerStatus.Idle, async () => {
-    console.log("Music stopped, player is idle.");
+    // console.log("Music stopped, player is idle.");
     const currentMessage = player?.currentMessage;
     if (currentMessage) {
       try {
