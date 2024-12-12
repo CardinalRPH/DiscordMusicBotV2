@@ -1,5 +1,8 @@
 import { type Message } from "discord.js";
 import { players } from "../../../AudioFunction/queueManager";
+import getDataPaging from "../../../utils/dataPaging";
+import { combinedEmbed } from "../../../utils/embedBuilder";
+import rowButtonBuilder from "../../../utils/rowButtonBuilder";
 
 export const data = {
   name: "remove",
@@ -35,8 +38,34 @@ export const execute = async (message: Message) => {
       }
       const skipedQueue = playerData.queue.splice(query - 1, 1);
       playerData.queue = [firstQueue, ...skipedQueue];
-      playerData.player.stop(true);
-      return message.reply({ content: "Song Skipped" });
+      const {
+        nextPage,
+        optimizeData,
+        prevPage,
+        totalPage,
+        totalRow,
+        currentPage,
+      } = getDataPaging(playerData.queue, 1);
+      const currentSong = playerData.queue[0];
+      await playerData.currentMessage?.edit({
+        embeds: [
+          combinedEmbed(
+            currentSong,
+            optimizeData,
+            totalRow,
+            currentPage,
+            totalPage
+          ),
+        ],
+        components: [
+          rowButtonBuilder({
+            next: { toPage: nextPage, disabled: !nextPage },
+            prev: { toPage: prevPage, disabled: !prevPage },
+            shuffle: { disabled: playerData.queue.length <= 2 },
+            skip: { disabled: playerData.queue.length <= 1 },
+          }),
+        ],
+      });
     } else {
       return message.reply({ content: "No Songs In Queue" });
     }
