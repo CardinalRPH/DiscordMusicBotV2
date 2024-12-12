@@ -1,13 +1,7 @@
-import {
-  type CommandInteraction,
-  GuildMember,
-  SlashCommandBuilder,
-} from "discord.js";
-import {
-  DiscordGatewayAdapterCreator,
-  getVoiceConnection,
-  joinVoiceChannel,
-} from "@discordjs/voice";
+import type { GuildMember } from "discord.js";
+import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
+import type { DiscordGatewayAdapterCreator } from "@discordjs/voice";
+import { getVoiceConnection, joinVoiceChannel } from "@discordjs/voice";
 export const data = new SlashCommandBuilder()
   .setName("connect")
   .setDescription("Connect To A Voice Channel");

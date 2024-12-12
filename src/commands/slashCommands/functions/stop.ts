@@ -1,8 +1,5 @@
-import {
-  type CommandInteraction,
-  GuildMember,
-  SlashCommandBuilder,
-} from "discord.js";
+import type { GuildMember } from "discord.js";
+import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { players } from "../../../AudioFunction/queueManager";
 export const data = new SlashCommandBuilder()
   .setName("stop")

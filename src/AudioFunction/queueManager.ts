@@ -1,7 +1,7 @@
+import type { AudioResource } from "@discordjs/voice";
 import {
   AudioPlayer,
   AudioPlayerStatus,
-  AudioResource,
   createAudioResource,
   type VoiceConnection,
 } from "@discordjs/voice";
@@ -150,6 +150,8 @@ const playerEvent = (
           rowButtonBuilder({
             next: { toPage: nextPage, disabled: nextPage ? false : true },
             prev: { toPage: prevPage, disabled: prevPage ? false : true },
+            shuffle: { disabled: player.queue.length > 2 ? false : true },
+            skip: { disabled: player.queue.length > 1 ? false : true },
           }),
         ],
       }));

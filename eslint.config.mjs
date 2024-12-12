@@ -1,6 +1,7 @@
 import prettier from 'eslint-plugin-prettier';
 import typescriptEslintParser from '@typescript-eslint/parser';
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
+import importPlugin from 'eslint-plugin-import';
 
 export default [
   {
@@ -9,11 +10,12 @@ export default [
   {
     files: ['**/*.js', '**/*.ts', '**/*.jsx', '**/*.tsx'],
     languageOptions: {
-      parser: typescriptEslintParser, // Ini adalah tempat untuk mendeklarasikan parser di flat config
+      parser: typescriptEslintParser,
     },
     plugins: {
       prettier,
       '@typescript-eslint': typescriptEslintPlugin,
+      import: importPlugin,
     },
     rules: {
       'prettier/prettier': [
@@ -29,6 +31,7 @@ export default [
       '@typescript-eslint/no-unused-vars': 'warn',
       'no-unused-vars': 'warn',
       'no-console': 'off',
+      "@typescript-eslint/consistent-type-imports": "error"
     },
   },
 ];

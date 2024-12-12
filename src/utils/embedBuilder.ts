@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { QueueItem } from "../AudioFunction/queueManager";
+import type { QueueItem } from "../AudioFunction/queueManager";
 import dcConfig from "../configs/config";
 import { MAX_QUEUE_OUTPUT } from "./constant";
 

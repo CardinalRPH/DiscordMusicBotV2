@@ -1,8 +1,5 @@
-import {
-  DiscordGatewayAdapterCreator,
-  getVoiceConnection,
-  joinVoiceChannel,
-} from "@discordjs/voice";
+import type { DiscordGatewayAdapterCreator } from "@discordjs/voice";
+import { getVoiceConnection, joinVoiceChannel } from "@discordjs/voice";
 import { type Message } from "discord.js";
 
 export const data = {

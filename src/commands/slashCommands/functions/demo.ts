@@ -1,14 +1,7 @@
-import {
-  type CommandInteraction,
-  GuildMember,
-  SlashCommandBuilder,
-  TextChannel,
-} from "discord.js";
-import {
-  DiscordGatewayAdapterCreator,
-  getVoiceConnection,
-  joinVoiceChannel,
-} from "@discordjs/voice";
+import type { GuildMember, TextChannel } from "discord.js";
+import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
+import type { DiscordGatewayAdapterCreator } from "@discordjs/voice";
+import { getVoiceConnection, joinVoiceChannel } from "@discordjs/voice";
 import {
   addToQueue,
   players,

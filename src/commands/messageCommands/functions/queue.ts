@@ -48,6 +48,8 @@ export const execute = async (message: Message) => {
           rowButtonBuilder({
             next: { toPage: nextPage, disabled: nextPage ? false : true },
             prev: { toPage: prevPage, disabled: prevPage ? false : true },
+            shuffle: { disabled: playerData.queue.length > 2 ? false : true },
+            skip: { disabled: playerData.queue.length > 1 ? false : true },
           }),
         ],
       })) as Message<true>);
@@ -58,6 +60,8 @@ export const execute = async (message: Message) => {
         rowButtonBuilder({
           next: { toPage: nextPage, disabled: nextPage ? false : true },
           prev: { toPage: prevPage, disabled: prevPage ? false : true },
+          shuffle: { disabled: playerData.queue.length > 2 ? false : true },
+          skip: { disabled: playerData.queue.length > 1 ? false : true },
         }),
       ],
     });

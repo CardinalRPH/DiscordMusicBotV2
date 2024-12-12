@@ -1,21 +1,22 @@
+import type { DiscordGatewayAdapterCreator } from "@discordjs/voice";
 import {
   AudioPlayerStatus,
-  DiscordGatewayAdapterCreator,
   getVoiceConnection,
   joinVoiceChannel,
 } from "@discordjs/voice";
-import { TextChannel, type Message } from "discord.js";
+import type { TextChannel } from "discord.js";
+import { type Message } from "discord.js";
 import {
   extractVideoId,
   fetchPlaylist,
   fetchSearchVideo,
   fetchVideoDetail,
 } from "../../../utils/ytResourceFinder";
+import type { QueueItem } from "../../../AudioFunction/queueManager";
 import {
   addToQueue,
   players,
   playNextSong,
-  QueueItem,
 } from "../../../AudioFunction/queueManager";
 import dcConfig from "../../../configs/config";
 import { yt_validate } from "play-dl";

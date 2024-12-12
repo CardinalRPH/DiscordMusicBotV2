@@ -1,9 +1,7 @@
-import {
-  DiscordGatewayAdapterCreator,
-  getVoiceConnection,
-  joinVoiceChannel,
-} from "@discordjs/voice";
-import { TextChannel, type Message } from "discord.js";
+import type { DiscordGatewayAdapterCreator } from "@discordjs/voice";
+import { getVoiceConnection, joinVoiceChannel } from "@discordjs/voice";
+import type { TextChannel } from "discord.js";
+import { type Message } from "discord.js";
 import {
   addToQueue,
   players,

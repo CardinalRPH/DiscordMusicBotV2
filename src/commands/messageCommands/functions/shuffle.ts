@@ -1,4 +1,5 @@
-import { TextChannel, type Message } from "discord.js";
+import type { TextChannel } from "discord.js";
+import { type Message } from "discord.js";
 import { players, type QueueItem } from "../../../AudioFunction/queueManager";
 
 export const data = {

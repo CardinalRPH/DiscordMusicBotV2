@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import dcConfig from "../configs/config";
-import { GeniusApiResponse } from "./geniusResponseInterface";
+import type { GeniusApiResponse } from "./geniusLyricsFinderTypes";
 
 const extractLyric = async (url: string) => {
   try {

@@ -1,25 +1,21 @@
-import {
-  type CommandInteraction,
-  GuildMember,
-  SlashCommandBuilder,
-  TextChannel,
-} from "discord.js";
+import type { GuildMember, TextChannel } from "discord.js";
+import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
 import {
   extractVideoId,
   fetchPlaylist,
   fetchSearchVideo,
   fetchVideoDetail,
 } from "../../../utils/ytResourceFinder";
+import type { QueueItem } from "../../../AudioFunction/queueManager";
 import {
   addToQueue,
   players,
   playNextSong,
-  QueueItem,
 } from "../../../AudioFunction/queueManager";
 import dcConfig from "../../../configs/config";
+import type { DiscordGatewayAdapterCreator } from "@discordjs/voice";
 import {
   AudioPlayerStatus,
-  DiscordGatewayAdapterCreator,
   getVoiceConnection,
   joinVoiceChannel,
 } from "@discordjs/voice";

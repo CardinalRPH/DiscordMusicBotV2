@@ -1,19 +1,19 @@
-interface Meta {
+type Meta = {
   status: number;
-}
+};
 
-interface ReleaseDateComponents {
+type ReleaseDateComponents = {
   year: number;
   month: number;
   day: number;
-}
+};
 
-interface Stats {
+type Stats = {
   unreviewed_annotations: number;
   hot: boolean;
-}
+};
 
-interface PrimaryArtist {
+type PrimaryArtist = {
   api_path: string;
   header_image_url: string;
   id: number;
@@ -22,9 +22,9 @@ interface PrimaryArtist {
   is_verified: boolean;
   name: string;
   url: string;
-}
+};
 
-interface Result {
+type Result = {
   annotation_count: number;
   api_path: string;
   artist_names: string;
@@ -50,20 +50,20 @@ interface Result {
   featured_artists: PrimaryArtist[];
   primary_artist: PrimaryArtist;
   primary_artists: PrimaryArtist[];
-}
+};
 
-interface Hit {
+type Hit = {
   highlights: any[];
   index: string;
   type: string;
   result: Result;
-}
+};
 
-interface Response {
+type Response = {
   hits: Hit[];
-}
+};
 
-export interface GeniusApiResponse {
+export type GeniusApiResponse = {
   meta: Meta;
   response: Response;
-}
+};

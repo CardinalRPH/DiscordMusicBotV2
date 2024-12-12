@@ -1,8 +1,5 @@
-import {
-  CommandInteraction,
-  GuildMember,
-  SlashCommandBuilder,
-} from "discord.js";
+import type { CommandInteraction, GuildMember } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { players, playNextSong } from "../../../AudioFunction/queueManager";
 import { AudioPlayerStatus, getVoiceConnection } from "@discordjs/voice";
 

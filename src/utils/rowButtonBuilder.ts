@@ -9,6 +9,12 @@ type rowButtonType = {
     toPage: number | null;
     disabled: boolean;
   };
+  skip: {
+    disabled: boolean;
+  };
+  shuffle: {
+    disabled: boolean;
+  };
 };
 
 const rowButtonBuilder = (data: rowButtonType) => {
@@ -27,7 +33,17 @@ const rowButtonBuilder = (data: rowButtonType) => {
       .setCustomId(
         JSON.stringify({ action: "next-btn", toPage: data.next.toPage })
       )
-      .setDisabled(data.next.disabled)
+      .setDisabled(data.next.disabled),
+    new ButtonBuilder()
+      .setLabel("Skip")
+      .setStyle(ButtonStyle.Primary)
+      .setCustomId("skip-btn")
+      .setDisabled(data.skip.disabled),
+    new ButtonBuilder()
+      .setLabel(">")
+      .setStyle(ButtonStyle.Primary)
+      .setCustomId("shuffle-btn")
+      .setDisabled(data.shuffle.disabled)
   );
   return rowButton;
 };

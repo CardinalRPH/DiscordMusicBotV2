@@ -1,75 +1,7 @@
 import axios from "axios";
 import dcConfig from "../configs/config";
 import play from "play-dl";
-
-interface videoApiResponse {
-  kind: string;
-  etag: string;
-  items: {
-    kind: string;
-    etag: string;
-    id: string;
-    snippet: {
-      publishedAt: Date;
-      channelId: string;
-      title: string;
-      description: string;
-      thumbnails: {
-        default: {
-          url: string;
-          width: number;
-          height: number;
-        };
-        medium: {
-          url: string;
-          width: number;
-          height: number;
-        };
-        high: {
-          url: string;
-          width: number;
-          height: number;
-        };
-        standard: {
-          url: string;
-          width: number;
-          height: number;
-        };
-        maxres: {
-          url: string;
-          width: number;
-          height: number;
-        };
-      };
-      channelTitle: string;
-      tags: string[];
-      categoryId: string;
-      liveBroadcastContent: string;
-      localized: {
-        title: string;
-        description: string;
-      };
-    };
-    contentDetails: {
-      duration: string;
-      dimension: string;
-      definition: string;
-      caption: string;
-      licensedContent: boolean;
-      regionRestriction: {
-        blocked?: string[];
-        allowed?: string[];
-      };
-      contentRating: any;
-
-      projection: string;
-    };
-  }[];
-  pageInfo: {
-    totalResults: number;
-    resultsPerPage: number;
-  };
-}
+import type { fetchVideoType, videoApiResponse } from "./ytResourceFinderTypes";
 
 export const extractVideoId = (url: string) => {
   const videoIdRegex =
@@ -118,14 +50,7 @@ export const fetchPlaylist = async (playlistURL: string) => {
   }
   // return playlistItem;
 };
-type fetchVideoType = {
-  videoId: string;
-  duration: string;
-  embedImg: string;
-  title: string;
-  singer: string;
-  singerId: string;
-};
+
 export const fetchVideoDetail = async (
   videoIds: string[],
   isBatch: boolean

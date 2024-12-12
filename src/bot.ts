@@ -11,7 +11,7 @@ import {
 } from "./data/CRUDFunction";
 import defaultPrefix from "./global/prefix";
 import { players } from "./AudioFunction/queueManager";
-import queueBtnExecute from "./commands/buttonCommands/queueBtn";
+import deployBtnCommands from "./commands/buttonCommands/deployBtnCommands";
 
 const client = new Client({
   intents: [
@@ -36,9 +36,9 @@ client.on("guildCreate", async (guild) => {
   await deployCommands({ guildId: guild.id });
 });
 
-client.on("interactionCreate", (interaction) => {
+client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
-    return queueBtnExecute(interaction);
+    await deployBtnCommands(interaction);
   }
 
   if (interaction.isCommand()) {

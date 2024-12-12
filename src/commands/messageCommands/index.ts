@@ -9,6 +9,7 @@ import * as queue from "./functions/queue";
 import * as skip from "./functions/skip";
 import * as shuffle from "./functions/shuffle";
 import * as lyrics from "./functions/lyrics";
+// import * as stop from "./functions/stop";
 
 const messageCommands = new Map<
   string,
@@ -26,6 +27,7 @@ const commands = [
   skip,
   shuffle,
   lyrics,
+  // stop
 ];
 commands.forEach((command) => {
   messageCommands.set(command.data.name, {

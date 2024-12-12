@@ -1,4 +1,4 @@
-import { QueueItem } from "../AudioFunction/queueManager";
+import type { QueueItem } from "../AudioFunction/queueManager";
 import { MAX_QUEUE_OUTPUT } from "./constant";
 
 const getDataPaging = (data: QueueItem[], page = 1) => {

@@ -1,10 +1,11 @@
+import type { GuildMember } from "discord.js";
 import {
   type CommandInteraction,
-  GuildMember,
   SlashCommandBuilder,
   type TextChannel,
 } from "discord.js";
-import { players, QueueItem } from "../../../AudioFunction/queueManager";
+import type { QueueItem } from "../../../AudioFunction/queueManager";
+import { players } from "../../../AudioFunction/queueManager";
 export const data = new SlashCommandBuilder()
   .setName("shuffle")
   .setDescription("Shuffle Current Queues");

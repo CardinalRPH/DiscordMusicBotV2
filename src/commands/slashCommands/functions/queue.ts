@@ -1,9 +1,5 @@
-import {
-  type CommandInteraction,
-  GuildMember,
-  Message,
-  SlashCommandBuilder,
-} from "discord.js";
+import type { GuildMember, Message } from "discord.js";
+import { type CommandInteraction, SlashCommandBuilder } from "discord.js";
 import { players } from "../../../AudioFunction/queueManager";
 import { combinedEmbed, queueEmbed } from "../../../utils/embedBuilder";
 import getDataPaging from "../../../utils/dataPaging";
@@ -55,6 +51,8 @@ export const execute = async (interaction: CommandInteraction) => {
           rowButtonBuilder({
             next: { toPage: nextPage, disabled: nextPage ? false : true },
             prev: { toPage: prevPage, disabled: prevPage ? false : true },
+            shuffle: { disabled: playerData.queue.length > 2 ? false : true },
+            skip: { disabled: playerData.queue.length > 1 ? false : true },
           }),
         ],
       })) as unknown as Message<true>);
@@ -65,6 +63,8 @@ export const execute = async (interaction: CommandInteraction) => {
         rowButtonBuilder({
           next: { toPage: nextPage, disabled: nextPage ? false : true },
           prev: { toPage: prevPage, disabled: prevPage ? false : true },
+          shuffle: { disabled: playerData.queue.length > 2 ? false : true },
+          skip: { disabled: playerData.queue.length > 1 ? false : true },
         }),
       ],
     });
