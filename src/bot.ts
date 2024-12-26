@@ -107,8 +107,6 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
   const voiceChannel = oldState.channel || newState.channel;
   if (voiceChannel?.members.filter((member) => !member.user.bot).size === 0) {
     if (!disconnectTimers.has(guildId)) {
-      console.log("tome here");
-
       const timer = setTimeout(async () => {
         const playerData = players.get(guildId);
         if (playerData) {

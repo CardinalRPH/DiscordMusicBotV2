@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Menjalankan build
-# npm run build
+# Start Build
+npm run build
 
-# Menjalankan start
+# Start 
 npm run start

@@ -13,7 +13,6 @@ import { type Message, type TextChannel } from "discord.js";
 import { combinedEmbed } from "../utils/embedBuilder";
 import getDataPaging from "../utils/dataPaging";
 import rowButtonBuilder from "../utils/rowButtonBuilder";
-import dcConfig from "../configs/config";
 
 export type QueueItem = {
   url: string;
@@ -39,20 +38,20 @@ export const players = new Map<string, PlayerData>();
 // const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
 // const parsedCookie = JSON.parse(cleanCookie);
 //this use for ytdl
-let cookies = null;
-try {
-  cookies = JSON.parse(dcConfig.YOUTUBE_COOKIE)?.cookies;
-} catch (error) {
-  console.error("Cookies Error Parsing");
-  console.error(error);
-}
-const agentOptions = {
-  pipelining: 5,
-  maxRedirections: 0,
-  localAddress: "127.0.0.1",
-};
+// let cookies = null;
+// try {
+//   cookies = JSON.parse(dcConfig.YOUTUBE_COOKIE)?.cookies;
+// } catch (error) {
+//   console.error("Cookies Error Parsing");
+//   console.error(error);
+// }
+// const agentOptions = {
+//   pipelining: 5,
+//   maxRedirections: 0,
+//   localAddress: "127.0.0.1",
+// };
 
-const agent = ytdl.createAgent(cookies, agentOptions);
+// const agent = ytdl.createAgent(cookies, agentOptions);
 //end
 
 //auth play dl
