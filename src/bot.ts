@@ -89,10 +89,15 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
   if (oldState.channelId && !newState.channelId && oldState.member?.user.bot) {
     const playerData = players.get(guildId);
     if (playerData) {
-      playerData?.player.stop();
+      playerData.player.stop(true);
       playerData.queue = [];
-      playerData.subscription?.unsubscribe();
-      await playerData.currentMessage?.delete();
+      if (playerData.subscription) {
+        playerData.subscription.unsubscribe();
+      }
+      const voiceConnection = getVoiceConnection(guildId);
+      if (voiceConnection) {
+        voiceConnection.destroy();
+      }
       playerData.currentResource = null;
       playerData.currentMessage = null;
       playerData.subscription = null;
@@ -102,14 +107,15 @@ client.on("voiceStateUpdate", async (oldState, newState) => {
   const voiceChannel = oldState.channel || newState.channel;
   if (voiceChannel?.members.filter((member) => !member.user.bot).size === 0) {
     if (!disconnectTimers.has(guildId)) {
+      console.log("tome here");
+
       const timer = setTimeout(async () => {
         const playerData = players.get(guildId);
         if (playerData) {
           const voiceConnection = getVoiceConnection(guildId);
-          playerData.player.stop();
+          playerData.player.stop(true);
           playerData.queue = [];
           playerData.subscription?.unsubscribe();
-          await playerData.currentMessage?.delete();
           playerData.currentResource = null;
           playerData.currentMessage = null;
           playerData.subscription = null;

@@ -24,6 +24,7 @@ const dcConfig = {
   GENIUS_AUTH: getEnvVar("GENIUS_AUTH"),
   YOUTUBE_COOKIE: getEnvVar("YOUTUBE_COOKIE"),
   YOUTUBE_USER_AGENT: getEnvVar("YOUTUBE_USER_AGENT"),
+  YOUTUBE_COOKIE_HS: getEnvVar("YOUTUBE_COOKIE_HS"),
 };
 
 export default dcConfig;

@@ -2,7 +2,7 @@
   "name": "discordbot02",
   "version": "1.0.0",
   "description": "Discord music Bot",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon",

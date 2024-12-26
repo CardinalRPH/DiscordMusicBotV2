@@ -3,6 +3,7 @@ import {
   AudioPlayer,
   AudioPlayerStatus,
   createAudioResource,
+  NoSubscriberBehavior,
   type VoiceConnection,
 } from "@discordjs/voice";
 import { validateYouTubeUrl } from "../utils/ytResourceFinder";
@@ -12,6 +13,7 @@ import { type Message, type TextChannel } from "discord.js";
 import { combinedEmbed } from "../utils/embedBuilder";
 import getDataPaging from "../utils/dataPaging";
 import rowButtonBuilder from "../utils/rowButtonBuilder";
+import dcConfig from "../configs/config";
 
 export type QueueItem = {
   url: string;
@@ -32,16 +34,25 @@ type PlayerData = {
 };
 
 export const players = new Map<string, PlayerData>();
+
 // const rawCookie = dcConfig.YOUTUBE_COOKIE;
 // const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
 // const parsedCookie = JSON.parse(cleanCookie);
 //this use for ytdl
-// const rawCookie = dcConfig.YOUTUBE_COOKIE;
-// const cleanCookie = rawCookie.replace(/\\r\\n/g, "").replace(/\\"/g, '"');
-// const agent = ytdl.createProxyAgent(
-//   { uri: "18.139.110.14:8080" },
-//   JSON.parse(cleanCookie)
-// );
+let cookies = null;
+try {
+  cookies = JSON.parse(dcConfig.YOUTUBE_COOKIE)?.cookies;
+} catch (error) {
+  console.error("Cookies Error Parsing");
+  console.error(error);
+}
+const agentOptions = {
+  pipelining: 5,
+  maxRedirections: 0,
+  localAddress: "127.0.0.1",
+};
+
+const agent = ytdl.createAgent(cookies, agentOptions);
 //end
 
 //auth play dl
@@ -62,7 +73,11 @@ export const addToQueue = (
   } else {
     // Create a new player and queue if it doesn't exist
     const newPlayer: PlayerData = {
-      player: new AudioPlayer(),
+      player: new AudioPlayer({
+        behaviors: {
+          noSubscriber: NoSubscriberBehavior.Play,
+        },
+      }),
       queue: [song],
       currentResource: null,
       currentMessage: null,
@@ -96,6 +111,7 @@ export const playNextSong = async (guildId: string) => {
         const stream = ytdl(nextSong?.url as string, {
           filter: "audioonly",
           highWaterMark: 1 << 25,
+          // agent: agent,
         });
 
         resource = createAudioResource(stream, {
@@ -105,7 +121,7 @@ export const playNextSong = async (guildId: string) => {
         resource = createAudioResource(nextSong?.url as string); // Path file audio
       }
 
-      playerData.player.play(resource); // Mainkan lagu
+      playerData.player.play(resource); // Play some song
       playerData.currentResource = resource;
 
       // console.log(`Playing next song: ${nextSong!.title}`);
